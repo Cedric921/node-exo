@@ -27,26 +27,26 @@ router.get("/", articleController.getAll);
 router.get("/:id", articleController.getOne);
 
 // Routes protégées
-router.post(
-    "/",
-    auth,
-    upload,
-    handleMulterError,
-    articleValidation,
-    validateRequest,
-    articleController.create
-);
+// router.post(
+//     "/",
+//     auth,
+//     upload,
+//     handleMulterError,
+//     articleValidation,
+//     validateRequest,
+//     articleController.create
+// );
 
-router.put(
-    "/:id",
-    auth,
-    upload,
-    handleMulterError,
-    articleValidation,
-    validateRequest,
-    articleController.update
-);
+// router.put(
+//     "/:id",
+//     auth,
+//     upload,
+//     handleMulterError,
+//     articleValidation,
+//     validateRequest,
+//     articleController.update
+// );
 
-router.delete("/:id", auth, articleController.delete);
+// router.delete("/:id", auth, articleController.delete);
 
 module.exports = router;

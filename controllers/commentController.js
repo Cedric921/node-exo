@@ -1,4 +1,5 @@
-const { Comment, User } = require("../models");
+const { Comment } = require("../models/Comment");
+const { User } = require("../models/User");
 
 const commentController = {
     // Créer un nouveau commentaire
