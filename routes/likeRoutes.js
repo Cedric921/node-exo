@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { likeController } = require("../controllers/likeController");
-const { auth } = require("../middlewares/auth");
+const likeController = require("../controllers/likeController");
+const auth = require("../middlewares/auth");
 
 // Routes publiques
 router.get("/count/:articleId", likeController.getLikeCount);

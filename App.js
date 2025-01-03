@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const { syncDatabase } = require("./config/database");
+
 require("dotenv").config();
 
 const app = express();
@@ -22,6 +24,8 @@ app.use((err, req, res, next) => {
         error: process.env.NODE_ENV === "development" ? err.message : undefined,
     });
 });
+
+syncDatabase();
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

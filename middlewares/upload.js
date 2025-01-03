@@ -1,7 +1,7 @@
 const multer = require("multer");
 const path = require("path");
 
-// Configuration du stockage temporaire
+// Configuration du stockage Cloudinary
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         // Stockage temporaire avant upload vers Cloudinary
@@ -58,12 +58,7 @@ const handleMulterError = (error, req, res, next) => {
     next(error);
 };
 
-module.exports = {
-    upload: upload.single("image"), // Configuration pour un seul fichier avec le nom 'image'
-    handleMulterError,
-};
-
-// middlewares/validation.js (Bonus : middleware de validation des données)
+// middleware de validation des données
 const { validationResult } = require("express-validator");
 
 const validateRequest = (req, res, next) => {
@@ -75,7 +70,7 @@ const validateRequest = (req, res, next) => {
 };
 
 module.exports = {
-    upload,
+    upload: upload.single("image"), // Configuration pour un seul fichier avec le nom 'image'
     handleMulterError,
     validateRequest,
 };

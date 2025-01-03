@@ -1,10 +1,10 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
+const { sequelize } = require("../config/database");
 const User = require("./User");
 const Article = require("./Article");
 
 const Like = sequelize.define(
-    "Like",
+    "like",
     {
         id: {
             type: DataTypes.UUID,

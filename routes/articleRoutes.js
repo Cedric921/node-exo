@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const articleController = require("../controllers/articleController");
-const { auth } = require("../middlewares/auth");
-const { upload, handleMulterError } = require("../middlewares/upload");
+const auth = require("../middlewares/auth");
+const { upload } = require("../middlewares/upload");
+const { handleMulterError } = require("../middlewares/upload");
 const { body } = require("express-validator");
 const { validateRequest } = require("../middlewares/upload");
 
@@ -27,26 +28,26 @@ router.get("/", articleController.getAll);
 router.get("/:id", articleController.getOne);
 
 // Routes protégées
-// router.post(
-//     "/",
-//     auth,
-//     upload,
-//     handleMulterError,
-//     articleValidation,
-//     validateRequest,
-//     articleController.create
-// );
+router.post(
+    "/",
+    auth,
+    handleMulterError,
+    articleValidation,
+    validateRequest,
+    upload,
+    articleController.create
+);
 
-// router.put(
-//     "/:id",
-//     auth,
-//     upload,
-//     handleMulterError,
-//     articleValidation,
-//     validateRequest,
-//     articleController.update
-// );
+router.put(
+    "/:id",
+    auth,
+    upload,
+    handleMulterError,
+    articleValidation,
+    validateRequest,
+    articleController.update
+);
 
-// router.delete("/:id", auth, articleController.delete);
+router.delete("/:id", articleController.delete);
 
 module.exports = router;

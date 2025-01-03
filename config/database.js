@@ -12,4 +12,20 @@ const sequelize = new Sequelize(
     }
 );
 
-module.exports = sequelize;
+// Fonction de synchronisation des Tableau
+
+const syncDatabase = async () => {
+    try {
+        // Test de connexion
+        await sequelize.authenticate();
+        console.log("Connexion à la base de données réussie");
+
+        // Synchronisation des modèles
+        await sequelize.sync({ alter: true });
+        console.log("Tables synchronisées avec succès");
+    } catch (error) {
+        console.error("Erreur de synchronisation:", error);
+    }
+};
+
+module.exports = { sequelize, syncDatabase };

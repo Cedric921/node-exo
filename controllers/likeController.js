@@ -1,4 +1,5 @@
-const { Like, Article } = require("../models");
+const Like = require("../models/Like");
+const Article = require("../models/Article");
 
 const likeController = {
     // Liker/Unliker un article

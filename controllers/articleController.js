@@ -1,9 +1,9 @@
-const { Article } = require("../models/Article");
-const { User } = require("../models/User");
+const Article = require("../models/Article");
+const User = require("../models/User");
 const cloudinary = require("../config/cloudinary");
 
 // Créer un nouvel article
-(exports.create = async (req, res) => {
+exports.create = async (req, res) => {
     try {
         const { title, content } = req.body;
         const userId = req.user.id; // Fourni par le middleware d'auth
@@ -30,106 +30,106 @@ const cloudinary = require("../config/cloudinary");
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-}),
-    // Récupérer tous les articles
-    (exports.getAll = async (req, res) => {
-        try {
-            const articles = await Article.findAll({
-                include: [
-                    {
-                        model: User,
-                        attributes: ["id", "email"],
-                    },
-                ],
-                order: [["createdAt", "DESC"]],
-            });
-            res.json(articles);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
+};
+// Récupérer tous les articles
+exports.getAll = async (req, res) => {
+    try {
+        const articles = await Article.findAll({
+            include: [
+                {
+                    model: User,
+                    attributes: ["id", "email"],
+                },
+            ],
+            order: [["createdAt", "DESC"]],
+        });
+        res.json(articles);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+// Récupérer un article spécifique
+exports.getOne = async (req, res) => {
+    try {
+        const article = await Article.findByPk(req.params.id, {
+            include: [
+                {
+                    model: User,
+                    attributes: ["id", "email"],
+                },
+            ],
+        });
+
+        if (!article) {
+            return res.status(404).json({ message: "Article non trouvé" });
         }
-    }),
-    // Récupérer un article spécifique
-    (exports.getOne = async (req, res) => {
-        try {
-            const article = await Article.findByPk(req.params.id, {
-                include: [
-                    {
-                        model: User,
-                        attributes: ["id", "email"],
-                    },
-                ],
-            });
 
-            if (!article) {
-                return res.status(404).json({ message: "Article non trouvé" });
-            }
+        res.json(article);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+// Mettre à jour un article
+exports.update = async (req, res) => {
+    try {
+        const article = await Article.findByPk(req.params.id);
 
-            res.json(article);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
+        if (!article) {
+            return res.status(404).json({ message: "Article non trouvé" });
         }
-    }),
-    // Mettre à jour un article
-    (exports.update = async (req, res) => {
-        try {
-            const article = await Article.findByPk(req.params.id);
 
-            if (!article) {
-                return res.status(404).json({ message: "Article non trouvé" });
-            }
-
-            // Vérifier que l'utilisateur est bien l'auteur
-            if (article.userId !== req.user.id) {
-                return res.status(403).json({ message: "Non autorisé" });
-            }
-
-            const { title, content } = req.body;
-
-            // Gérer la mise à jour de l'image
-            if (req.file) {
-                // Supprimer l'ancienne image si elle existe
-                if (article.imagePublicId) {
-                    await cloudinary.uploader.destroy(article.imagePublicId);
-                }
-
-                const result = await cloudinary.uploader.upload(req.file.path);
-                await article.update({
-                    title,
-                    content,
-                    imageUrl: result.secure_url,
-                    imagePublicId: result.public_id,
-                });
-            } else {
-                await article.update({ title, content });
-            }
-
-            res.json(article);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
+        // Vérifier que l'utilisateur est bien l'auteur
+        if (article.userId !== req.user.id) {
+            return res.status(403).json({ message: "Non autorisé" });
         }
-    }),
-    // Supprimer un article
-    (exports.delete = async (req, res) => {
-        try {
-            const article = await Article.findByPk(req.params.id);
 
-            if (!article) {
-                return res.status(404).json({ message: "Article non trouvé" });
-            }
+        const { title, content } = req.body;
 
-            // Vérifier que l'utilisateur est bien l'auteur
-            if (article.userId !== req.user.id) {
-                return res.status(403).json({ message: "Non autorisé" });
-            }
-
-            // Supprimer l'image de Cloudinary si elle existe
+        // Gérer la mise à jour de l'image
+        if (req.file) {
+            // Supprimer l'ancienne image si elle existe
             if (article.imagePublicId) {
                 await cloudinary.uploader.destroy(article.imagePublicId);
             }
 
-            await article.destroy();
-            res.json({ message: "Article supprimé avec succès" });
-        } catch (error) {
-            res.status(500).json({ error: error.message });
+            const result = await cloudinary.uploader.upload(req.file.path);
+            await article.update({
+                title,
+                content,
+                imageUrl: result.secure_url,
+                imagePublicId: result.public_id,
+            });
+        } else {
+            await article.update({ title, content });
         }
-    });
+
+        res.json(article);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+// Supprimer un article
+exports.delete = async (req, res) => {
+    try {
+        const article = await Article.findByPk(req.params.id);
+
+        if (!article) {
+            return res.status(404).json({ message: "Article non trouvé" });
+        }
+
+        // Vérifier que l'utilisateur est bien l'auteur
+        if (article.userId !== req.user.id) {
+            return res.status(403).json({ message: "Non autorisé" });
+        }
+
+        // Supprimer l'image de Cloudinary si elle existe
+        if (article.imagePublicId) {
+            await cloudinary.uploader.destroy(article.imagePublicId);
+        }
+
+        await article.destroy();
+        res.json({ message: "Article supprimé avec succès" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
