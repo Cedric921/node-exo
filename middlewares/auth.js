@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
-const { User } = require("../models/User");
+const User = require("../models/User");
+require("dotenv").config();
 
+// Middleware d'authentification
 const auth = async (req, res, next) => {
     try {
         // Récupérer le token du header Authorization
@@ -25,6 +27,13 @@ const auth = async (req, res, next) => {
 
         // Ajouter l'utilisateur à l'objet request
         req.user = user;
+        console.log(
+            "l Utilisateur" +
+                " " +
+                req.user.dataValues.email +
+                " " +
+                "Est Authentifier"
+        );
         next();
     } catch (error) {
         res.status(401).json({ message: "Authentification non valide,thanks" });

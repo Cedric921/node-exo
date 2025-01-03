@@ -19,7 +19,7 @@ const articleValidation = [
         .notEmpty()
         .withMessage("Le contenu est requis")
         .trim()
-        .isLength({ min: 10 })
+        .isLength({ min: 10, max: 300 })
         .withMessage("Le contenu doit contenir au moins 10 caractères"),
 ];
 
@@ -32,7 +32,7 @@ router.post(
     "/",
     auth,
     handleMulterError,
-    articleValidation,
+    // articleValidation,
     validateRequest,
     upload,
     articleController.create
@@ -43,7 +43,7 @@ router.put(
     auth,
     upload,
     handleMulterError,
-    articleValidation,
+    // articleValidation,
     validateRequest,
     articleController.update
 );
