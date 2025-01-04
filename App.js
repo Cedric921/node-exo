@@ -16,7 +16,7 @@ app.use("/api/comments", require("./routes/commentRoutes"));
 app.use("/api/likes", require("./routes/likeRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
 
-// Gestionnaire d'erreurs global
+// Gestionnaire d erreurs global
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({

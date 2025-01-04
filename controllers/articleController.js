@@ -1,6 +1,7 @@
 const Article = require("../models/Article");
 const User = require("../models/User");
-const cloudinary = require("../config/cloudinary");
+const Like = require("../models/Like");
+const { cloudinary } = require("../config/cloudinary");
 
 // Créer un nouvel article
 exports.create = async (req, res) => {
@@ -78,16 +79,16 @@ exports.update = async (req, res) => {
             return res.status(404).json({ message: "Article non trouvé" });
         }
 
-        // Vérifier que l'utilisateur est bien l'auteur
+        // Verifier que l'utilisateur est bien l'auteur
         if (article.userId !== req.user.id) {
             return res.status(403).json({ message: "Non autorisé" });
         }
 
         const { title, content } = req.body;
 
-        // Gérer la mise à jour de l'image
+        // Gerer la mise à jour de l'image
         if (req.file) {
-            // Supprimer l'ancienne image si elle existe
+            // Supprimer l ancienne image si elle existe
             if (article.imagePublicId) {
                 await cloudinary.uploader.destroy(article.imagePublicId);
             }
@@ -110,11 +111,26 @@ exports.update = async (req, res) => {
 };
 // Supprimer un article
 exports.delete = async (req, res) => {
+    // console.log(req.params.id);
+
     try {
+        // Vérifier si l'article existe
         const article = await Article.findByPk(req.params.id);
+        //vérifier si l'article a de like
+        const articleLike = await Like.findOne({
+            where: { articleId: req.params.id },
+        });
+        console.log(article);
+        console.log(articleLike);
 
         if (!article) {
             return res.status(404).json({ message: "Article non trouvé" });
+        }
+
+        if (!articleLike) {
+            return res
+                .status(404)
+                .json({ message: "L article n a pas de like" });
         }
 
         // Vérifier que l'utilisateur est bien l'auteur
@@ -127,7 +143,12 @@ exports.delete = async (req, res) => {
             await cloudinary.uploader.destroy(article.imagePublicId);
         }
 
+        //suprimer articleLike dans bd
+        await articleLike.destroy();
+
+        //suprimer l article dans la bd
         await article.destroy();
+
         res.json({ message: "Article supprimé avec succès" });
     } catch (error) {
         res.status(500).json({ error: error.message });

@@ -48,6 +48,6 @@ router.put(
     articleController.update
 );
 
-router.delete("/:id", articleController.delete);
+router.delete("/:id", auth, articleController.delete);
 
 module.exports = router;
