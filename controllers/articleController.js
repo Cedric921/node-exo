@@ -120,8 +120,6 @@ exports.delete = async (req, res) => {
         const articleLike = await Like.findOne({
             where: { articleId: req.params.id },
         });
-        console.log(article);
-        console.log(articleLike);
 
         if (!article) {
             return res.status(404).json({ message: "Article non trouvé" });
