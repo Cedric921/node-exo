@@ -43,7 +43,7 @@ router.put(
     auth,
     upload,
     handleMulterError,
-    // articleValidation,
+    articleValidation,
     validateRequest,
     articleController.update
 );

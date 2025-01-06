@@ -27,7 +27,7 @@ router.get("/article/:articleId", commentController.getByAticle);
 router.post(
     "/",
     auth,
-    // commentValidation,
+    commentValidation,
     validateRequest,
     commentController.create
 );
