@@ -6,7 +6,7 @@ exports.create = async (req, res) => {
     try {
         const { content, articleId } = req.body;
         const userId = req.user.id;
-
+        console.log(content + " " + articleId + "" + userId);
         const comment = await Comment.create({
             content,
             articleId,
